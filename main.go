@@ -21,21 +21,56 @@ func parseFile(file string) ([]int, error) {
 	return modules, err
 }
 
-func calculateFuel(mass float64) float64 {
-	return math.Floor(mass/3) - 2
+func calculateFuel(mass int) int {
+	return int(math.Floor(float64(mass)/3) - 2)
 }
 
-func main() {
+func calculateExtraFuel(mainFuel int) int {
+	remainderFuel := mainFuel
+	var extraFuel int
+	for remainderFuel >= 0 {
+		remainderFuel = calculateFuel(remainderFuel)
+		if remainderFuel > 0 {
+			extraFuel += remainderFuel
+		}
+	}
+
+	return extraFuel
+}
+
+func partOneTask() int {
 	modules, err := parseFile(defaultFilename)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	var totalFuelNeeded float64
+	var totalModuleFuelNeeded int
 
 	for _, i := range modules {
-		totalFuelNeeded += calculateFuel(float64(i))
+		totalModuleFuelNeeded += calculateFuel(int(i))
 	}
 
-	fmt.Printf("Total fuel needed: %f\n", totalFuelNeeded)
+	return totalModuleFuelNeeded
+}
+
+func partTwoTask() int {
+	modules, err := parseFile(defaultFilename)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	var totalModuleFuelNeeded int
+
+	for _, i := range modules {
+		totalModuleFuelNeeded += calculateExtraFuel(int(i))
+	}
+
+	return totalModuleFuelNeeded
+}
+
+func main() {
+	fmt.Printf("[Day 1] Total fuel needed: %v\n", partOneTask())
+	fmt.Printf("[Day 2] Total fuel needed: %v\n", partTwoTask())
+
+	// 4847868
 }
